@@ -30,7 +30,6 @@ app.get("/todos", (req, res) => {
   })
 });
 
-
 app.get("/todos/:id", (req, res) => {
   var id = req.params.id
 
@@ -40,7 +39,7 @@ app.get("/todos/:id", (req, res) => {
 
   Todo.findById(id).then((todo) => {
     if (!todo) {
-      return res.status.send(404).send();
+      return res.status(404).send();
     }
 
     res.send({todo});
