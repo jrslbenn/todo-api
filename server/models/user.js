@@ -51,6 +51,15 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+  return user.update({
+    $pull: {
+      tokens: {token}
+    }
+  });
+};
+
 UserSchema.statics.findByToken = function (token) {
   var User = this;
   var decoded;
@@ -87,11 +96,11 @@ UserSchema.statics.findByCredentials = function (email, password) {
 };
 
 UserSchema.pre("save", function (next) {
-  var User = this;
-  if (User.isModified("password")) {
+  var user = this;
+  if (user.isModified("password")) {
     bcrypt.genSalt(10, (err, salt) => {
-     bcrypt.hash(User.password, salt, (err, hash) => {
-       User.password = hash;
+     bcrypt.hash(user.password, salt, (err, hash) => {
+       user.password = hash;
        next();
      });
     });
